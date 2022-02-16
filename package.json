@@ -1,0 +1,19 @@
+{
+  "name": "devbootmcamp_api",
+  "version": "1.0.0",
+  "description": "Development Bootcamp Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "NODE_ENV=production nod server",
+    "dev": "nodemon server"
+  },
+  "author": "Vijayendra Gaur",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
