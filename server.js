@@ -1,9 +1,17 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const morgan = require('morgan')
+const morgan = require('morgan');
+const connectDB = require('./config/db');
 
-app = express();
+
+//Load env vars
+dotenv.config({ path: './config/config.env' });
+
+//Connect to Mongo databse
+connectDB();
+
 //Route files
+app = express();
 const bootcamps = require('./routes/bootcamps');
 app.use('/api/v1/bootcamps', bootcamps);
 
@@ -12,12 +20,6 @@ if (process.env.NODE_ENV === 'development') {
     
     app.use(morgan('dev'));
 }
-
-
-
-//Load env vars
-dotenv.config({ path: './config/config.env' });
-
 
 const PORT = process.env.PORT || 5000;
 const env = process.env.NODE_ENV;
