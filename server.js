@@ -13,6 +13,7 @@ connectDB();
 //Route files
 app = express();
 const bootcamps = require('./routes/bootcamps');
+const { Server } = require('http');
 app.use('/api/v1/bootcamps', bootcamps);
 
 //Dev Loggin Middleware Run only when in dev environment 
@@ -34,4 +35,9 @@ app.listen(PORT, (err) => {
      console.log(`server running in 
     ${env} 
     mode on port ${PORT}`);
+});
+process.on('unhandledRejection', (err, promise) => {
+   
+    console.log(`Error: ${err.message}`)
+    server.close(() => process.exit(1))
 });
