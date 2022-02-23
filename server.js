@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
-
+const errorHandler = require('./middleware/error');
 
 //Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -18,6 +18,8 @@ app.use(express.json());
 const bootcamps = require('./routes/bootcamps');
 const { Server } = require('http');
 app.use('/api/v1/bootcamps', bootcamps);
+
+app.use(errorHandler);
 
 //Dev Loggin Middleware Run only when in dev environment 
 if (process.env.NODE_ENV === 'development') {
