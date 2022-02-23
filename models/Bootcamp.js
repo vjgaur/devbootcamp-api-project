@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const { stringify } = require('querystring');
 
 const BootcampSchema = new mongoose.Schema({
-
     name: {
         type: String,
         required: [true, 'Please add a name'],

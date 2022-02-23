@@ -13,7 +13,7 @@ exports.getBootcamps = async(req, res, next) => {
     }
     catch (error)
     {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -32,7 +32,7 @@ exports.getBootcamp = async (req, res, next) => {
     }
     catch (error)
     {
-        next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404));
+        next(error);
     }
     
 }
@@ -53,7 +53,7 @@ exports.createBootcamp = async (req, res, next) => {
        
    }
    catch (error) {
-       res.status(400).json({ success: false });
+    next(error);
    }
 
     
@@ -67,14 +67,13 @@ exports.updateBootcamp = async(req, res, next) => {
    
     try {
     
-        const bootcamp = await Bootcamp.findOneAndUpdate(req.param.id, req.body,{
+        const bootcamp = await Bootcamp.findByIdAndUpdate(req.param.id, req.body,{
             new: true,
             runValidators:true
         });
      
-        if (!bootcamp)
-        {
-            return res.status(400).json({ success: false });
+        if (!bootcamp) {
+            next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`,404));
         }
         res.status(200).json({
          success: true,
@@ -83,7 +82,7 @@ exports.updateBootcamp = async(req, res, next) => {
         
     }
     catch (error) {
-        res.status(400).json({ success: false });
+        next(error);
     }
 }
 
@@ -93,16 +92,18 @@ exports.updateBootcamp = async(req, res, next) => {
 
 exports.deleteBootcamp = async(req, res, next) => {
     
-    const bootcamp = await Bootcamp.findById(req.params.id);
+    try {
+        const bootcamp = await Bootcamp.findById(req.params.id);
 
-    if (!bootcamp) {
-      return next(
-        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
-      );
+        if (!bootcamp) {
+            return next(
+                new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+            );
+        }
+
     }
-
-    bootcamp.remove();
-
-    res.status(200).json({ success: true, data: {} });
+    catch(err){
+        next(err);
+    }
 
 }
