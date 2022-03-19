@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
-//const sendEmail = require('../utils/sendEmail');
+const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 
 // @desc      Register user
@@ -127,9 +127,9 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   // Get reset token
   const resetToken = user.getResetPasswordToken();
+  console.log(resetToken);
 
   await user.save({ validateBeforeSave: false });
-
   // Create reset url
   const resetUrl = `${req.protocol}://${req.get(
     'host'
