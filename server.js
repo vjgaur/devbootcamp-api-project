@@ -6,6 +6,20 @@ const errorHandler = require('./middleware/error');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const cors = require('cors');
+
+
+const apilimiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 10 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
 
 //Load env vars
 dotenv.config({ path: './config/config.env' });
@@ -28,6 +42,24 @@ const reviews = require('./routes/reviews');
 app.use(fileUpload());
 //Set static folder 
 app.use(express.static(path.join(__dirname,'public')));
+
+//Sanitize Data
+app.use(mongoSanitize());
+
+//Set security headers
+app.use(helmet());
+
+//Prevent cross site scripting attack
+app.use(xss());
+
+//Apply the rate limiting middleware to API calls 
+app.use('/api', apilimiter);
+
+//Preventing htto paramaeter pollution
+app.use(hpp());
+
+//Enable CORS
+app.use(cors())
 
 //Mount Routers
 app.use('/api/v1/bootcamps', bootcamps);
